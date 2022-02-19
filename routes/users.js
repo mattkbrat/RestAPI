@@ -54,6 +54,7 @@ router.get('/all', function(req, res, next) {
   res.send(students)
 });
 
+
 /* GET names from students */
 router.get('/names', function (req, res){
   let studentNames = [];
@@ -63,9 +64,8 @@ router.get('/names', function (req, res){
   res.send(studentNames)
 })
 
+
 /* GET student JSON object when passed id and if criteria matches */
-
-
 router.get('/id/:id', function (req, res){
 
   let result = checkId(req.params.id)
@@ -89,7 +89,7 @@ router.post('/id/:id', function(req, res){
 
   // Student with specified id exists, send code 409 Conflict
   if (result.id === 1){
-    res.status(303)
+    res.status(302)
     res.send('Student exists. Exiting.')
     return
   }
@@ -102,7 +102,6 @@ router.post('/id/:id', function(req, res){
 router.put('/id/:id', function (req, res){
   let student_id = parseInt(req.params.id)
   let result = checkId(student_id)
-  console.log(result)
 
   if (result.id === 1){
     students[result.result[0].id] = {'id':student_id, 'name':''}
@@ -123,5 +122,19 @@ router.put('/id/:id', function (req, res){
   // }
 
   })
+
+/* Delete student from list given matching id*/
+router.delete('/id/:id', function (req, res){
+  let student_id = parseInt(req.params.id)
+  let result = checkId(student_id)
+
+  if (result.id === 1){
+    students.splice(student_id)
+    res.send(students)
+  } else{
+    res.status(204)
+    res.send("Student does not exist.")
+  }
+})
 
 module.exports = router;
